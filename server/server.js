@@ -20,8 +20,8 @@ var finalAlbum = [];
 
 //existing lists in the create list section
 const list = [
-    {name: 'Upbeat', id: 0, tracks: 0, creator: 'lucy', rating: '4', lastModified: '2021-01-11', description: "this is a playlist for happy times", status:"private"},
-    {name: 'Sad', id: 1, tracks: "2,3", creator: 'adre', rating: '5', lastModified: '2020-01-11', description: "this is a playlist for sad times", status:"public"}
+    {name: 'Upbeat', id: 0, tracks: 0, creator: 'lucy', rating: 4, lastModified: '2021-01-11', description: "this is a playlist for happy times", status:"private", comments:"", numberOfRatings:1},
+    {name: 'Sad', id: 1, tracks: "2,3", creator: 'adre', rating: 5, lastModified: '2020-01-11', description: "this is a playlist for sad times", status:"public", comment:"", numberOfRatings:1}
 ];
 
 //setup serving front-end code
@@ -89,11 +89,14 @@ router1.route('/:name') //routes with a part name
         if (part < 0) { //not found
             res.status(404).send(`Part ${req.params.name} not found`);
         }
-        else {//part exists, then change stock
+        else {//part exists, then change 
             list[part].status = req.body.status;
             list[part].tracks = req.body.tracks;
             list[part].description = req.body.description;
             list[part].lastModified = req.body.lastModified;
+            list[part].comment = req.body.comment;
+            list[part].rating = req.body.rating;
+            list[part].numberOfRatings = req.body.numberOfRatings 
             res.send(list[part]);
         }
     })

@@ -21,13 +21,17 @@ function CreateListAuth() {
         document.getElementById('add-list1').onclick = function() {
             checkListName1()
         }
+        //for deleting a list
+        document.getElementById('delete-list').onclick = function() {
+            checkListName2()
+        }
         //for editing a list
         document.getElementById('add-list2').onclick = function() {
             checkListName3()
         }
-        //for deleting a list
-        document.getElementById('delete-list').onclick = function() {
-            checkListName2()
+        //for adding a review to a list
+        document.getElementById('review-list').onclick = function() {
+            checkListName4()
         }
 
         //input san. 
@@ -107,7 +111,9 @@ function CreateListAuth() {
                 lastModified: today,
                 rating: 0,
                 status: statusExistingList1,
-                description: DescriptionExistingList
+                description: DescriptionExistingList,
+                comment: " ",
+                numberOfRatings: 0,
             }
             //use post 
             fetch('/api/lists', {
@@ -150,7 +156,6 @@ function CreateListAuth() {
                 data.forEach(e => { //grab each element (e) and make a list item for it
                     if (e.creator == creatorName) { //only display public playlists
                         maximumPersonalLists = data.length;
-                        //console.log(maximumPersonalLists);
                         const item = document.createElement('li');
                         l.appendChild(item);
                         const item1 = document.createElement('div');
@@ -225,7 +230,7 @@ function CreateListAuth() {
                                         countmins += parseInt(countsecs/60);
                                         countsecs = parseInt(countsecs%60);
                                     }
-                                    var alertFinal = stringAlert + "\n" +"Duration: " + countmins + ":" + countsecs + "\n" + "Creator: " + e.creator + "\n" +"Description: " + e.description + "\n" +"Status: " + e.status + "\n" +"Last Modified: " + e.lastModified;
+                                    var alertFinal = stringAlert + "\n" +"Duration: " + countmins + ":" + countsecs + "\n" + "Creator: " + e.creator + "\n" +"Description: " + e.description + "\n" +"Status: " + e.status  + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating +"Last Modified: " + e.lastModified;
                                     alert(alertFinal); 
 
                                 }
@@ -236,9 +241,8 @@ function CreateListAuth() {
                                             return true;
                                             }
                                         });
-                                        //console.log(match)
                                         if (match.length> 0) {
-                                            alertFinal = "Track: " + match[0].title + " Album: " + match[0].album + " Artist: " + match[0].artistName + "\n" +" Duration: " + match[0].duration + "\n" + "\n" + "Creator: " + e.creator + "\n" + "Description: " + e.description + "\n" +"Status: " + e.status + "\n" +"Last Modified: " + e.lastModified;
+                                            alertFinal = "Track: " + match[0].title + " Album: " + match[0].album + " Artist: " + match[0].artistName + "\n" +" Duration: " + match[0].duration + "\n" + "Creator: " + e.creator + "\n" + "Description: " + e.description + "\n" +"Status: " + e.status + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating  + "\n" +"Last Modified: " + e.lastModified;
                                             getTracks1(match[0].title);
                                             if (greatBtn.style.display === "none") {
                                                 greatBtn.style.display = "block";
@@ -252,6 +256,9 @@ function CreateListAuth() {
                                         else {
                                             alert("empty");
                                         }        
+                                    } else if (e.tracks == 0){
+                                        alertFinal = "Track: None" + "\n" +" Duration: " + 0 + "\n" + "Creator: " + e.creator + "\n" + "Description: " + e.description + "\n" +"Status: " + e.status + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating  + "\n" +"Last Modified: " + e.lastModified;
+                                        alert(alertFinal);
                                     }
                                 }
                             }))  
@@ -275,7 +282,6 @@ function CreateListAuth() {
                 data.forEach(e => { //grab each element (e) and make a list item for it
                     if (e.status == "public" && maximumPublicLists < 10) { //only display public playlists and display only 10 playlists
                         maximumPublicLists++;
-                        //console.log(maximumPublicLists);
                         const item = document.createElement('li');
                         l.appendChild(item);
                         const item1 = document.createElement('div');
@@ -350,7 +356,7 @@ function CreateListAuth() {
                                         countmins += parseInt(countsecs/60);
                                         countsecs = parseInt(countsecs%60);
                                     }
-                                    var alertFinal = stringAlert + "\n" +"Duration: " + countmins + ":" + countsecs + "\n" + "Creator: " + e.creator + "\n" +"Description: " + e.description + "\n" +"Status: " + e.status + "\n" +"Last Modified: " + e.lastModified;
+                                    var alertFinal = stringAlert + "\n" +"Duration: " + countmins + ":" + countsecs + "\n" + "Creator: " + e.creator + "\n" +"Description: " + e.description + "\n" +"Status: " + e.status + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating + "\n" +"Last Modified: " + e.lastModified;
                                     alert(alertFinal); 
 
                                 }
@@ -361,9 +367,8 @@ function CreateListAuth() {
                                             return true;
                                             }
                                         });
-                                        //console.log(match)
                                         if (match.length> 0) {
-                                            alertFinal = "Track: " + match[0].title + " Album: " + match[0].album + " Artist: " + match[0].artistName + "\n" +" Duration: " + match[0].duration + "\n" + "\n" + "Creator: " + e.creator + "\n" + "Description: " + e.description + "\n" +"Status: " + e.status + "\n" +"Last Modified: " + e.lastModified;
+                                            alertFinal = "Track: " + match[0].title + " Album: " + match[0].album + " Artist: " + match[0].artistName + "\n" +" Duration: " + match[0].duration + "\n" + "Creator: " + e.creator + "\n" + "Description: " + e.description + "\n" +"Status: " + e.status + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating + "\n" +"Last Modified: " + e.lastModified;
                                             getTracks1(match[0].title);
                                             if (greatBtn.style.display === "none") {
                                                 greatBtn.style.display = "block";
@@ -373,10 +378,13 @@ function CreateListAuth() {
                                             getTracks1(match[0].title);
                                             greatBtn.style.display = "block";
                                             alert(alertFinal);
-                                        }
+                                        } 
                                         else {
                                             alert("empty");
                                         }        
+                                    } else if (e.tracks == 0){
+                                        alertFinal = "Track: None" + "\n" +" Duration: " + 0 + "\n" + "Creator: " + e.creator + "\n" + "Description: " + e.description + "\n" +"Status: " + e.status + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating  + "\n" +"Last Modified: " + e.lastModified;
+                                        alert(alertFinal);
                                     }
                                 }
                             }))  
@@ -528,8 +536,50 @@ function CreateListAuth() {
             }))
         }
 
+        //checking if list name does not exist when adding review to list
+        function checkListName4() {
+            document.getElementById("status7").innerText = "";
+            var newList1 = document.getElementById('list-name4').value;
+            var review = document.getElementById('review').value;
+            var comment = document.getElementById('comment').value;
+
+            newList1 = removeTags(newList1); //input sant.
+
+            fetch("/api/lists")
+            .then(res => res.json()
+            .then(data => {
+                //check name for each list element name
+                const match = data.filter(element => {
+                    if (element.name.toLowerCase() == newList1.toLowerCase()) {
+                    return true;
+                    }
+                });
+
+                //if there is no match, then call addList function, if there is a match, then display error
+                if (match.length == 0)
+                {
+                    document.getElementById("status6").innerText = `Name doesn't exist`;
+                }
+                else if (match[0].status == "private") {
+                    document.getElementById("status6").innerText = `Can't review private lists`;
+                }
+                else if (review == "" && comment == "") {
+                    document.getElementById("status6").innerText = `Add either review or comment`;
+                }
+                else if (review < 0 || review >5 || isNaN(review)) {
+                    document.getElementById("status6").innerText = `Enter number from 0-5`;
+                }
+                else {
+                    addReview();
+                    console.log("ok")
+                }
+            }))
+        }
+
         //checking if list name does not exist when editing
         function checkListName3() {
+            document.getElementById("status4").innerText = ""
+            document.getElementById("status5").innerText = ""
             var newList1 = document.getElementById('list-name3').value;
             newList1 = removeTags(newList1); //input sant.
 
@@ -550,7 +600,6 @@ function CreateListAuth() {
                 }
                 else {
                     editList();
-                    //console.log(newList1)
                 }
             }))
         }
@@ -558,6 +607,7 @@ function CreateListAuth() {
         //function to modify list's descp/status
         function editList() {
             document.getElementById("status5").innerText = "";
+            document.getElementById("status4").innerText = "";
             var listName1 = document.getElementById('list-name3').value; //getting input of list name
             listName1 = removeTags(listName1);
 
@@ -582,7 +632,8 @@ function CreateListAuth() {
                     return true;
                     }
                 });
-                //console.log(match)
+
+                //if description is empty
                 //check if track ids are just numbers (within range of tracks ids in csv) & commas
                 const newpart1 = { //sending json in req body
                     name: match[0].name,
@@ -594,7 +645,6 @@ function CreateListAuth() {
                     status: statusUpdate1,
                     description: DescriptionUpdate
                 }
-                //console.log(newpart);
 
                 //if there is a match, then call post
                 fetch(`/api/lists/${match[0].name}`, { //use post for match
@@ -743,6 +793,81 @@ function CreateListAuth() {
             }))   
         }
 
+        //function to add a review to list
+        function addReview() {
+            document.getElementById("status7").innerText = "";
+            document.getElementById("status6").innerText = ""
+            var listName = document.getElementById('list-name4').value; //getting input of list name
+            listName = removeTags(listName);
+            
+            var review = document.getElementById('review').value; //rating
+            var comment = document.getElementById('comment').value; //comment
+            comment = removeTags(comment) //input sant.
+
+            fetch("/api/lists")
+            .then(res => res.json()
+            .then(data => {
+                //check name for each list element name
+                const match = data.filter(element => {
+                    if (element.name.toLowerCase() == listName.toLowerCase()) {
+                    return true;
+                    }
+                });
+                //if rating is empty
+                if (review == "") {
+                    var newRating = parseFloat(match[0].rating);
+                    var newnumber = parseFloat(match[0].numberOfRatings);
+                } else if (review != ""){
+                    var newRating = (parseFloat(match[0].rating*match[0].numberOfRatings) + parseFloat(review))/(parseFloat(match[0].numberOfRatings) + parseFloat(1));
+                    newRating = Math.round(newRating * 10) / 10; //only to one decimal place
+                    var newnumber = parseFloat(match[0].numberOfRatings + 1);
+                }
+                //if comment is not empty
+                if (comment != "") {
+                    comment= "\n - " + comment + ", From: " + creatorName;
+                }
+                //add review/comment
+                const newpart = { //sending json in req body
+                    name: listName,
+                    id: match[0].id,
+                    tracks: match[0].tracks,
+                    creator: match[0].creator,
+                    lastModified: match[0].lastModified,
+                    rating: newRating,
+                    comment: match[0].comment + " " + comment,
+                    status: match[0].status,
+                    numberOfRatings: newnumber,
+                    description: match[0].description
+                }
+
+                //if there is a match, then call post
+                if (match.length > 0) {
+                    fetch(`/api/lists/${match[0].name}`, { //use post for match
+                        method: 'POST',
+                        headers: {'Content-type': 'application/json'},
+                        body: JSON.stringify(newpart)
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            res.json()
+                            .then(data => {
+                                getList();
+                                maximumPublicLists =0;
+                                getListPublic();
+                                document.getElementById("status7").innerText = `Added review to list: ${data.name}`; //set status
+                            }
+                            )
+                            .catch(err => console.log('Failed to get json object'))  
+                        }
+                        else {
+                            document.getElementById("status7").innerText = `Failed to add`;
+                        }
+                    })
+                    .catch()
+                }               
+            }))   
+        }
+
         //checking if list name exist when deleting it
         function checkListName2() {
             var newList2 = document.getElementById('list-name2').value;
@@ -761,7 +886,13 @@ function CreateListAuth() {
                 //if there is a match, then delete, if there is a match, then display error
                 if (match.length != 0 && match[0].creator == creatorName)
                 {
-                    deleteList();
+                    let text = "Are you sure you want to delete?";
+                    if (window.confirm(text) == true) {
+                        deleteList();
+                    } else {
+                      text = "You canceled!";
+                      document.getElementById('list-name2').value = "";
+                    }
                 }
                 else if (match.length == 0){
                     document.getElementById("status2").innerText = `Name doesn't exist`;

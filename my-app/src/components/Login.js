@@ -91,6 +91,19 @@ function Login () {
         </ul> 
         <div id="new-div-list1"></div>
         <button id="greatBtn1" class="dissapear">close</button>
+
+        <div class="space"></div>
+        <div class="admin">
+            <h2>Add Review</h2>
+            <span>
+                Name: <input type="text" id="list-name4"/>
+                Review (out of 5): <input type="text" id="review"/>
+                Comment: <input type="text" id="comment"/>
+                <button id="review-list"> Ok</button>
+            </span>
+            <span id="status6"></span>
+            <span id="status7"></span>
+        </div>
         <div class="space"></div>
       </div>
     );
