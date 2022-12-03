@@ -230,7 +230,7 @@ function CreateListAuth() {
                                         countmins += parseInt(countsecs/60);
                                         countsecs = parseInt(countsecs%60);
                                     }
-                                    var alertFinal = stringAlert + "\n" +"Duration: " + countmins + ":" + countsecs + "\n" + "Creator: " + e.creator + "\n" +"Description: " + e.description + "\n" +"Status: " + e.status  + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + e.rating +"Last Modified: " + e.lastModified;
+                                    var alertFinal = stringAlert + "\n" +"Duration: " + countmins + ":" + countsecs + "\n" + "Creator: " + e.creator + "\n" +"Description: " + e.description + "\n" +"Status: " + e.status  + "\n" + "Comments: " + e.comment + "\n" + "Rating: " + "\n" + e.rating +"Last Modified: " + e.lastModified;
                                     alert(alertFinal); 
 
                                 }
@@ -570,8 +570,12 @@ function CreateListAuth() {
                     document.getElementById("status6").innerText = `Enter number from 0-5`;
                 }
                 else {
-                    addReview();
-                    console.log("ok")
+                    let text = "Are you sure you want to submit your review?";
+                    if (window.confirm(text) == true) {
+                        addReview();
+                    } else {
+                      text = "You canceled!";
+                    }
                 }
             }))
         }
@@ -824,7 +828,7 @@ function CreateListAuth() {
                 }
                 //if comment is not empty
                 if (comment != "") {
-                    comment= "\n - " + comment + ", From: " + creatorName;
+                    comment= "\n - " + comment + ", From: " + creatorName + ", Date Added: " + today;
                 }
                 //add review/comment
                 const newpart = { //sending json in req body
