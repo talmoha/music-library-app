@@ -24,6 +24,12 @@ const list = [
     {name: 'Sad', id: 1, tracks: "2,3", creator: 'adre', rating: 5, lastModified: '2020-01-11', description: "this is a playlist for sad times", status:"public", comment:"", numberOfRatings:1}
 ];
 
+//existing users
+const users = [
+    {username: 'lucy', email: "", password: '123'},
+    {nusername: 'adre', email: "", password: '123'}
+];
+
 //setup serving front-end code
 app.use('/', express.static('static'));
 
