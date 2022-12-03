@@ -20,8 +20,8 @@ var finalAlbum = [];
 
 //existing lists in the create list section
 const list = [
-    {name: 'Upbeat', id: 0, tracks: 0, creator: 'lucy', rating: '4', lastModified: '2021-01-11', description: "this is a playlist for happy times"},
-    {name: 'Sad', id: 1, tracks: "2,3", creator: 'adre', rating: '5', lastModified: '2020-01-11', description: "this is a playlist for sad times"}
+    {name: 'Upbeat', id: 0, tracks: 0, creator: 'lucy', rating: '4', lastModified: '2021-01-11', description: "this is a playlist for happy times", status:"private"},
+    {name: 'Sad', id: 1, tracks: "2,3", creator: 'adre', rating: '5', lastModified: '2020-01-11', description: "this is a playlist for sad times", status:"public"}
 ];
 
 //setup serving front-end code
