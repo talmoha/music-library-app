@@ -90,7 +90,10 @@ router1.route('/:name') //routes with a part name
             res.status(404).send(`Part ${req.params.name} not found`);
         }
         else {//part exists, then change stock
+            list[part].status = req.body.status;
             list[part].tracks = req.body.tracks;
+            list[part].description = req.body.description;
+            list[part].lastModified = req.body.lastModified;
             res.send(list[part]);
         }
     })

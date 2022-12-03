@@ -51,6 +51,20 @@ function Login () {
             <span id="status1"></span>
             <span id="status3"></span>
         </div>
+
+        <div class="space"></div>
+        <div class="admin">
+            <h2 class="spaceTop">Edit Existing List</h2>
+            <span>
+                Name: <input type="text" id="list-name3"/>
+                Description: <input type="text" id="list-descriptionUpdate"/>
+                Public: <input type="checkbox" id="list-statusUpdate"/>
+                <button id="add-list2"> Add</button>
+            </span>
+            <span id="status4"></span>
+            <span id="status5"></span>
+        </div>
+
         <div class="space"></div>
         <div class="admin">
             <h2>Delete List</h2>

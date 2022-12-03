@@ -3,6 +3,7 @@ import React, {userEffect, useState} from 'react'
 
 function CreateListAuth() {
     useEffect(() => {
+        var creatorName = "lucy";
         //maximum number of personal lists displayed is 20, so check this variable whenever a new list is created
         var maximumPersonalLists = 0;
         var maximumPublicLists = 0;
@@ -19,6 +20,10 @@ function CreateListAuth() {
         //for adding tracks to a list
         document.getElementById('add-list1').onclick = function() {
             checkListName1()
+        }
+        //for editing a list
+        document.getElementById('add-list2').onclick = function() {
+            checkListName3()
         }
         //for deleting a list
         document.getElementById('delete-list').onclick = function() {
@@ -98,7 +103,7 @@ function CreateListAuth() {
             const newpart = {
                 name: nameExistingList,
                 tracks: 0,
-                creator: "lucy",
+                creator: creatorName,
                 lastModified: today,
                 rating: 0,
                 status: statusExistingList1,
@@ -143,7 +148,7 @@ function CreateListAuth() {
             .then(res => res.json()
             .then(data => {
                 data.forEach(e => { //grab each element (e) and make a list item for it
-                    if (e.creator == "lucy") { //only display public playlists
+                    if (e.creator == creatorName) { //only display public playlists
                         maximumPersonalLists = data.length;
                         //console.log(maximumPersonalLists);
                         const item = document.createElement('li');
@@ -497,8 +502,6 @@ function CreateListAuth() {
             }))
         }
 
-
-
         //checking if list name does not exist when adding tracks to it
         function checkListName1() {
             var newList1 = document.getElementById('list-name1').value;
@@ -525,7 +528,101 @@ function CreateListAuth() {
             }))
         }
 
-        //function to add a track to an existing list
+        //checking if list name does not exist when editing
+        function checkListName3() {
+            var newList1 = document.getElementById('list-name3').value;
+            newList1 = removeTags(newList1); //input sant.
+
+            fetch("/api/lists")
+            .then(res => res.json()
+            .then(data => {
+                //check name for each list element name
+                const match = data.filter(element => {
+                    if (element.name.toLowerCase() == newList1.toLowerCase()) {
+                    return true;
+                    }
+                });
+
+                //if there is no match, then call addList function, if there is a match, then display error
+                if (match.length == 0)
+                {
+                    document.getElementById("status4").innerText = `Name doesn't exist`;
+                }
+                else {
+                    editList();
+                    //console.log(newList1)
+                }
+            }))
+        }
+
+        //function to modify list's descp/status
+        function editList() {
+            document.getElementById("status5").innerText = "";
+            var listName1 = document.getElementById('list-name3').value; //getting input of list name
+            listName1 = removeTags(listName1);
+
+            //description and status fields
+            var DescriptionUpdate = document.getElementById('list-descriptionUpdate');
+            DescriptionUpdate = removeTags(DescriptionUpdate.value); //input sant.
+
+            var statusUpdate1 = document.getElementById('list-statusUpdate');
+            if (statusUpdate1.checked) {
+                statusUpdate1 = "public";
+            }
+            else {
+                statusUpdate1 = "private";
+            }
+
+            fetch("/api/lists")
+            .then(res => res.json()
+            .then(data => {
+                //check name for each list element name
+                const match = data.filter(element => {
+                    if (element.name.toLowerCase() == listName1.toLowerCase()) {
+                    return true;
+                    }
+                });
+                //console.log(match)
+                //check if track ids are just numbers (within range of tracks ids in csv) & commas
+                const newpart1 = { //sending json in req body
+                    name: match[0].name,
+                    id: match[0].id,
+                    tracks: match[0].tracks,
+                    creator: creatorName,
+                    lastModified: today,
+                    rating: match[0].rating,
+                    status: statusUpdate1,
+                    description: DescriptionUpdate
+                }
+                //console.log(newpart);
+
+                //if there is a match, then call post
+                fetch(`/api/lists/${match[0].name}`, { //use post for match
+                    method: 'POST',
+                    headers: {'Content-type': 'application/json'},
+                    body: JSON.stringify(newpart1)
+                })
+                .then(res => {
+                    if (res.ok) {
+                        res.json()
+                        .then(data => {
+                            getList();
+                            maximumPublicLists =0;
+                            getListPublic();
+                            document.getElementById("status5").innerText = `Modified: ${data.name}`; //set status
+                        }
+                        )
+                        .catch(err => console.log('Failed to get json object'))  
+                    }
+                    else {
+                        document.getElementById("status5").innerText = `Failed to add`;
+                    }
+                })
+                .catch()
+            }))   
+        }
+
+        //function to add a track to an existing list/edit descp/status
         function addList1() {
             document.getElementById("status3").innerText = "";
             var listName = document.getElementById('list-name1').value; //getting input of list name
@@ -567,7 +664,12 @@ function CreateListAuth() {
                     const newpart = { //sending json in req body
                         name: listName,
                         id: match[0].id,
-                        tracks: newID
+                        tracks: newID,
+                        creator: creatorName,
+                        lastModified: today,
+                        rating: match[0].rating,
+                        status: match[0].status,
+                        description: match[0].description
                     }
 
                     //if there is a match, then call post
@@ -600,8 +702,14 @@ function CreateListAuth() {
                     const newpart = { //sending json in req body
                         name: listName,
                         id: match[0].id,
-                        tracks: listIDsNew
+                        tracks: listIDsNew,
+                        creator: creatorName,
+                        lastModified: today,
+                        rating: match[0].rating,
+                        status: match[0].status,
+                        description: match[0].description
                     }
+                    console.log(newpart);
 
                     //if there is a match, then call post
                     if (match.length > 0) {
@@ -651,12 +759,15 @@ function CreateListAuth() {
                 });
 
                 //if there is a match, then delete, if there is a match, then display error
-                if (match.length != 0)
+                if (match.length != 0 && match[0].creator == creatorName)
                 {
                     deleteList();
                 }
-                else {
+                else if (match.length == 0){
                     document.getElementById("status2").innerText = `Name doesn't exist`;
+                }
+                else if (match.creator != creatorName) {
+                    document.getElementById("status2").innerText = `You don't have permission to delete playlist`;
                 }
             }))
         }
