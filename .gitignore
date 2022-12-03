@@ -1,7 +1,8 @@
 #for csv & jsonfiles
 *.csv
 *.json
-.md
+*.md
+*.png
 
 #other uneditable folders like public
 public/
