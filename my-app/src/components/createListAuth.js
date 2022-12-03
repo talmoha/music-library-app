@@ -763,7 +763,6 @@ function CreateListAuth() {
                         status: match[0].status,
                         description: match[0].description
                     }
-                    console.log(newpart);
 
                     //if there is a match, then call post
                     if (match.length > 0) {
