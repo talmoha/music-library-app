@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "../firebase" //auth function from firebase js file 
+import { sendEmailVerification } from "firebase/auth"; 
+
 
 const AuthContext = React.createContext()
 
@@ -15,8 +17,33 @@ export function AuthProvider({ children }) {
     return auth.createUserWithEmailAndPassword(email, password)
   }
 
-  function login(email, password) {
+  function login(email, password) { //signs in user using email and password
     return auth.signInWithEmailAndPassword(email, password)
+  }
+
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: 'https://www.example.com/finishSignUp?cartId=1234',
+    // This must be true.
+    handleCodeInApp: true,
+    iOS: {
+      bundleId: 'com.example.ios'
+    },
+    android: {
+      packageName: 'com.example.android',
+      installApp: true,
+      minimumVersion: '12'
+    },
+    dynamicLinkDomain: 'example.page.link'
+  };
+
+  function verify() {
+    return sendEmailVerification(currentUser);
+  }
+
+  function resetPassword(email) {//resets password using email
+    return auth.sendPasswordResetEmail(email)
   }
 
   useEffect(() => { //stops listenings when settting user
@@ -31,7 +58,9 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     signup,
-    login
+    login,
+    resetPassword,
+    verify
   }
 
   return (

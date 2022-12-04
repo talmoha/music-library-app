@@ -1,3 +1,4 @@
+import './App.css';
 import React, { useRef, useState } from "react"
 import { Form, Button, Card, Alert } from "react-bootstrap"
 import { useAuth } from "../contexts/AuthContext"
@@ -18,8 +19,16 @@ export default function Login() {
           setError("")
           setLoading(true)
           await login(emailRef.current.value, passwordRef.current.value)
-          history("/Login")
-        } catch {
+          if (currentUser.emailVerified) {
+            console.log(currentUser.emailVerified)
+            history("/Login")
+          } else if (currentUser.emailVerified == false){
+            console.log(currentUser.emailVerified)
+            document.getElementById("visible").style.display = "block";
+            setError("Not verified")
+            window.location.reload(false);
+          }
+        } catch (error){
           setError("Failed to sign in")
         }
     
@@ -33,7 +42,7 @@ export default function Login() {
     <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Sign In</h2>
-          {currentUser && currentUser.email}
+          {currentUser.email}
           {error && <Alert variant="danger">{error}</Alert>}
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
@@ -48,8 +57,14 @@ export default function Login() {
               Sign In
             </Button>
           </Form>
+          <div className="w-100 text-center mt-3">
+            <Link to="/forgot-password">Forgot Password?</Link>
+          </div>
         </Card.Body>
       </Card>
+      <div className="visibility w-100 text-center mt-2" id="visible">
+      Resend verification? <Link to="/verify">Verify</Link>
+    </div>
       <div className="w-100 text-center mt-2">
       Need an account? <Link to="/register">Sign Up</Link>
     </div>

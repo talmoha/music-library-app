@@ -343,3 +343,7 @@ word-wrap: break-word;
 .no-bullet {
   list-style-type:none;
 }
+
+.visibility {
+  display: none
+}

@@ -18,7 +18,7 @@ function MainPage () {
                 <a class="active" href="#home">Home</a>
                 <div class="login-container">
                     <li class="no-bullet">
-                        <a type="submit" href="/Login">Login</a>
+                        <a type="submit" href="/signin">Login</a>
                     </li>
                 </div>
             </div>

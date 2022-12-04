@@ -5,8 +5,11 @@ import GetTracks from './getTracks';
 import GetArtists from './getArtists';
 import GetAlbums from './getAlbums';
 import CreateListAuth from './createListAuth';
+import { useAuth } from '../contexts/AuthContext';
 
 function Login () {
+    const {currentUser} = useAuth()
+    const userName = currentUser.email.substring(0, currentUser.email.indexOf('@'));
   
     useEffect(() => { //automatically call at the beginning
         
@@ -18,6 +21,7 @@ function Login () {
                 <a class="active" href="#home">Home</a>
                 <div class="login-container">
                     <li class="no-bullet">
+                        <a>Welcome {userName}</a>
                         <a type="submit" href="/signin">Sign out</a>
                     </li>
                 </div>
