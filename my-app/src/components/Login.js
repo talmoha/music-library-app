@@ -18,7 +18,7 @@ function Login () {
                 <a class="active" href="#home">Home</a>
                 <div class="login-container">
                     <li class="no-bullet">
-                        <a type="submit" href="/">Sign out</a>
+                        <a type="submit" href="/signin">Sign out</a>
                     </li>
                 </div>
             </div>

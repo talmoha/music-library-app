@@ -2,17 +2,23 @@ import MainPage from './components/mainPage';
 import React, {useEffect, useState} from 'react'
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from './components/Login';
+import Signup from './components/signup';
+import Signin from './components/signin';
+import { AuthProvider } from './contexts/AuthContext';
 
 
 function App() {
   return (
     <div>
       <BrowserRouter>
+      <AuthProvider>
         <Routes>
-        <Route exact path="/" element={<MainPage/>}/>
-        <Route exact path="/login" element={<Login/>}/>
-
+          <Route exact path="/" element={<MainPage/>}/>
+          <Route exact path="/login" element={<Login/>}/>
+          <Route path="/register" element={<Signup/>}/>
+          <Route path="/signin" element={<Signin/>}/>
         </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );
