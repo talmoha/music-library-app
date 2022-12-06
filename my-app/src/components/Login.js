@@ -22,7 +22,7 @@ function Login () {
                 <div class="login-container">
                     <li class="no-bullet">
                         <a>Welcome {userName}</a>
-                        <a type="submit" href="/signin">Sign out</a>
+                        <a type="submit" href="/signin" onClick={currentUser.email == ""}>Sign out</a>
                     </li>
                 </div>
             </div>

@@ -1,9 +1,31 @@
 import { Component, useEffect } from 'react';
 import React, {userEffect, useState} from 'react'
+import { useAuth } from '../contexts/AuthContext';
+
 
 function CreateListAuth() {
+    const {currentUser} = useAuth()
     useEffect(() => {
-        var creatorName = "lucy";
+        var creatorName = currentUser.email;
+
+        //add user to backend database for unauthenticated users
+        function finduser() {
+        fetch(`/api/users`)
+        .then(res => res.json()
+        .then(data => {
+            //check name for each list element name
+            const match = data.filter(element => {
+                if (element.email == creatorName) {
+                return true;
+                }
+            });
+            if (match.length > 0) {
+                creatorName = match[0].username;
+            }
+        }))
+        .catch()
+        }
+        finduser();
         //maximum number of personal lists displayed is 20, so check this variable whenever a new list is created
         var maximumPersonalLists = 0;
         var maximumPublicLists = 0;

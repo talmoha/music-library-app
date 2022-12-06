@@ -6,6 +6,8 @@ const router1 = express.Router(); //router for list
 const router2 = express.Router(); //router for tracks
 const router3 = express.Router(); //router for artists
 const router4 = express.Router(); //router for albums
+const router5 = express.Router(); //router for users
+const router6 = express.Router(); //router for users
 
 const csv = require('csv-parser'); //parser library
 const fs = require('fs');//file stream
@@ -26,8 +28,13 @@ const list = [
 
 //existing users
 const users = [
-    {username: 'lucy', email: "", password: '123'},
-    {nusername: 'adre', email: "", password: '123'}
+    {username: 'lucy', email: "yovicik635@cosaxu.com"},
+    {username: 'adre', email: "wimifag843@cnogs.com"}
+];
+
+//unauthed users
+const unUsers = [
+    {username: '', email: ""}
 ];
 
 //setup serving front-end code
@@ -62,7 +69,43 @@ router.route('/:id') //all routes with a part ID
         }
     })
 
-////////////////////////////////////////////////////////////////////////////for list
+////////////////////////////////////////////////////////////////////////////////////////users
+//parse data in body as JSON
+router5.use(express.json());
+
+router5.route('/') //all routes with a part ID
+    //get details of users
+    .get((req, res) => {
+        res.send(users); //array of genres to display on URL localhost:3000/api/list
+    })
+    //create a new part (post) if you give the body some json code
+    .post((req, res) => {
+        const newpart = req.body;
+        const part = unUsers.findIndex(p => p.email === newpart.email);
+        
+        const newpartInsert = {username: unUsers[part].username, email: newpart.email }
+        console.log(part)
+        users.push(newpartInsert);
+        res.send(newpartInsert);
+    })
+    
+//for unauth users
+router6.use(express.json());
+
+router6.route('/') //all routes with a part ID
+    //get details of users
+    .get((req, res) => {
+        res.send(unUsers); //array of genres to display on URL localhost:3000/api/list
+    })
+    //create a new part (post) if you give the body some json code
+    .post((req, res) => {
+        const newpart = req.body;
+        const newpartInsert = {username: newpart.username, email: newpart.email }
+        unUsers.push(newpartInsert);
+        res.send(newpartInsert);
+    })
+
+    ////////////////////////////////////////////////////////////////////////////for list
 //parse data in body as JSON
 router1.use(express.json());
 
@@ -241,5 +284,11 @@ app.use('/api/artists', router3)
 
 //for ALBUMS: install router at /api/albums & we can use router4 instead of app
 app.use('/api/albums', router4)
+
+//for users: install router at /api/users & we can use router5 instead of app
+app.use('/api/users', router5)
+
+//for users: install router at /api/users & we can use router5 instead of app
+app.use('/api/register', router6)
 
 app.listen(port, () => console.log(`Listening on port ${port}...`)) //display this msg on console

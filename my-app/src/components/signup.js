@@ -24,6 +24,7 @@ export default function Signup() {
           setError("")
           setLoading(true)
           await signup(emailRef.current.value, passwordRef.current.value)
+          addUser(usernameRef.current.value, emailRef.current.value);
           history("/verify")
         } catch {
           setError("Failed to create an account")
@@ -31,6 +32,21 @@ export default function Signup() {
     
         setLoading(false)
     }
+
+    //add user to backend database for unauthenticated users
+    function addUser(username, email) {
+      const newpart = {
+        username: username,
+        email: email,
+      }
+      fetch('/api/register', {
+        method: 'POST',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify(newpart)
+      })
+      .then()
+      .catch()
+  }
 
 
     //the code for the sign up form was taken from the snipped of https://www.youtube.com/watch?v=PKwu15ldZ7k&t=1

@@ -19,21 +19,48 @@ export default function Login() {
           setError("")
           setLoading(true)
           await login(emailRef.current.value, passwordRef.current.value)
-          if (currentUser.emailVerified) {
-            console.log(currentUser.emailVerified)
-            history("/Login")
-          } else if (currentUser.emailVerified == false){
-            console.log(currentUser.emailVerified)
-            document.getElementById("visible").style.display = "block";
-            setError("Not verified")
-            window.location.reload(false);
-          }
+          checkUser(emailRef.current.value); // to verify if user verified email
         } catch (error){
           setError("Failed to sign in")
         }
     
         setLoading(false)
     }
+
+    //checks if user is in database
+    function checkUser(email) {
+      fetch(`/api/users`)
+      .then(res => res.json()
+      .then(data => {
+          //check name for each list element name
+          const match = data.filter(element => {
+              if (element.email == email) {
+              return true;
+              }
+          });
+          if (match.length > 0) {
+            history("/Login")
+          } else if (currentUser.emailVerified && match.length == 0) { //if user autenticated but not yet added to list
+            console.log("add user")
+            
+            //use post 
+            const newpart = {
+              email: currentUser.email,
+            }
+            fetch('/api/users', {
+              method: 'POST',
+              headers: {'Content-type': 'application/json'},
+              body: JSON.stringify(newpart)
+            })
+            .then(history("/Login"))
+            .catch()
+
+          } else {
+            document.getElementById("visible").style.display = "block";
+            setError("Not verified")
+          }
+      }))
+  }
 
 
     //the code for the sign up form was taken from the snipped of https://www.youtube.com/watch?v=PKwu15ldZ7k&t=1

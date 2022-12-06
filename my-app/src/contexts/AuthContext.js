@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "../firebase" //auth function from firebase js file 
 import { sendEmailVerification } from "firebase/auth"; 
-
+import jwt_decode from 'jwt-decode'
 
 const AuthContext = React.createContext()
 
@@ -18,7 +18,15 @@ export function AuthProvider({ children }) {
   }
 
   function login(email, password) { //signs in user using email and password
-    return auth.signInWithEmailAndPassword(email, password)
+    function check() {
+          currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
+          // Send token to your backend via HTTPS
+          jwt_decode(idToken.email)
+        }).catch(function(error) {
+          // Handle error
+        });
+    }
+    return auth.signInWithEmailAndPassword(email, password), check();
   }
 
   const actionCodeSettings = {
