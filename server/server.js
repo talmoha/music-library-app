@@ -7,7 +7,9 @@ const router2 = express.Router(); //router for tracks
 const router3 = express.Router(); //router for artists
 const router4 = express.Router(); //router for albums
 const router5 = express.Router(); //router for users
-const router6 = express.Router(); //router for users
+const router6 = express.Router(); //router for unauthes users
+const router7 = express.Router(); //router for admins
+const router8 = express.Router(); //router for unhide reviews
 
 const csv = require('csv-parser'); //parser library
 const fs = require('fs');//file stream
@@ -29,12 +31,28 @@ const list = [
 //existing users
 const users = [
     {username: 'lucy', email: "yovicik635@cosaxu.com"},
-    {username: 'adre', email: "wimifag843@cnogs.com"}
+    {username: 'adre', email: "wimifag843@cnogs.com"},
+    {username: 'administrator', email: "kobaxip254@cnogs.com"}
+];
+
+//admin users
+const admin = [
+    {username: 'administrator', email: "kobaxip254@cnogs.com"}
+]
+
+//deleted users
+const deletedUsers = [
+    {email: "taa@gmail.com"},
 ];
 
 //unauthed users
 const unUsers = [
     {username: '', email: ""}
+];
+
+//hidden reviews
+const hidden = [
+    {listName: '', userName: "", review: ""}
 ];
 
 //setup serving front-end code
@@ -104,8 +122,22 @@ router6.route('/') //all routes with a part ID
         unUsers.push(newpartInsert);
         res.send(newpartInsert);
     })
+//for deleted users
+router7.use(express.json());
 
-    ////////////////////////////////////////////////////////////////////////////for list
+router7.route('/') //all routes with a part ID
+    //get details of users
+    .get((req, res) => {
+        res.send(deletedUsers); //array of genres to display on URL localhost:3000/api/list
+    })
+    //create a new part (post) if you give the body some json code
+    .post((req, res) => {
+        const newpart = req.body;
+        const newpartInsert = {email: newpart.email }
+        deletedUsers.push(newpartInsert);
+        res.send(newpartInsert);
+    })
+////////////////////////////////////////////////////////////////////////////for list
 //parse data in body as JSON
 router1.use(express.json());
 
@@ -146,6 +178,7 @@ router1.route('/:name') //routes with a part name
             list[part].comment = req.body.comment;
             list[part].rating = req.body.rating;
             list[part].numberOfRatings = req.body.numberOfRatings 
+            list[part].comment = req.body.comment 
             res.send(list[part]);
         }
     })
@@ -161,7 +194,35 @@ router1.route('/:name') //routes with a part name
         list.splice(part, 1);
         res.sendStatus(404);
     })
+////////////////////////////////////////////////////////////////////////////for hidden reviews
+//parse data in body as JSON
+router8.use(express.json());
 
+//routes for /api/unhide
+router8.route('/') //all the routes to the base prefix
+    //get a list of all lists
+    .get((req, res) => {
+        res.send(hidden); //array of genres to display on URL localhost:3000/api/list
+    })
+
+    //create a new part (post) if you give the body some json code
+    .post((req, res) => {
+        const newpart = req.body;
+        const newpartInsert = {listName: newpart.listName, userName: newpart.userName, review: newpart.review}
+        hidden.push(newpartInsert);
+        res.send(newpartInsert);
+    })
+    .delete((req, res) => {
+        //find the part
+        const part = hidden.findIndex(p => p.listName === req.params.listName && p.userName === req.params.userName);
+        //if it doesn't exist
+        if (part < 0) { //not found
+            res.status(404).send(`Not found`);
+        }
+        //delete otherwise
+        hidden.splice(part, 1);
+        res.sendStatus(404);
+    })
 ////////////////////////////////////////////////////////////////////////////for tracks
 //parse data in body as JSON
 router2.use(express.json());
@@ -290,5 +351,11 @@ app.use('/api/users', router5)
 
 //for users: install router at /api/users & we can use router5 instead of app
 app.use('/api/register', router6)
+
+//for deleted users
+app.use('/api/delete', router7)
+
+//for deleted users
+app.use('/api/unhide', router8)
 
 app.listen(port, () => console.log(`Listening on port ${port}...`)) //display this msg on console

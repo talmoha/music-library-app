@@ -591,6 +591,9 @@ function CreateListAuth() {
                 else if (review < 0 || review >5 || isNaN(review)) {
                     document.getElementById("status6").innerText = `Enter number from 0-5`;
                 }
+                else if (match[0].comment.includes(creatorName)) {
+                    document.getElementById("status6").innerText = `Can't add more than 1 review per playlist`;
+                }
                 else {
                     let text = "Are you sure you want to submit your review?";
                     if (window.confirm(text) == true) {
@@ -669,7 +672,8 @@ function CreateListAuth() {
                     lastModified: today,
                     rating: match[0].rating,
                     status: statusUpdate1,
-                    description: DescriptionUpdate
+                    description: DescriptionUpdate,
+                    comment: match[0].comment
                 }
 
                 //if there is a match, then call post
@@ -849,7 +853,7 @@ function CreateListAuth() {
                 }
                 //if comment is not empty
                 if (comment != "") {
-                    comment= "\n - " + comment + ", From: " + creatorName + ", Date Added: " + today;
+                    comment= "\n - From: " + creatorName + ", Comment: " + comment + ", Date Added: " + today + " -" + creatorName;
                 }
                 //add review/comment
                 const newpart = { //sending json in req body

@@ -19,13 +19,50 @@ export default function Login() {
           setError("")
           setLoading(true)
           await login(emailRef.current.value, passwordRef.current.value)
-          checkUser(emailRef.current.value); // to verify if user verified email
+          //checkUser(emailRef.current.value); // to verify if user verified email
+          //check if user is deleted 
+          deleteUserCheck(emailRef.current.value); // to verify if user verified email
         } catch (error){
           setError("Failed to sign in")
         }
     
         setLoading(false)
     }
+
+    //checks if user is in database
+    function deleteUserCheck(email) {
+      fetch(`/api/delete`)
+      .then(res => res.json()
+      .then(data => {
+          //check name for each list element name
+          const match = data.filter(element => {
+              if (element.email == email) {
+              return true;
+              }
+          });
+          if (match.length == 0) {
+            checkUser(emailRef.current.value); // to verify if user verified email
+          } else if (match.length > 0) { //if user autenticated but not yet added to list
+            console.log("delete user")
+            setError("Deactivated account, contact admin for help: tasneem@gmail.com")
+          }
+      }))
+    }
+
+    //delete user
+    function deleteUser(email) {
+      const newpart = {
+        email: emailRef.current.value,
+      }
+      fetch('/api/delete', {
+        method: 'POST',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify(newpart)
+      })
+      .then(console.log("deleted user"))
+      .catch()
+
+      }
 
     //checks if user is in database
     function checkUser(email) {
@@ -39,10 +76,14 @@ export default function Login() {
               }
           });
           if (match.length > 0) {
-            history("/Login")
+            if (emailRef.current.value == "kobaxip254@cnogs.com") {
+              history("/admin")
+            } else {
+              history("/Login")
+            }
           } else if (currentUser.emailVerified && match.length == 0) { //if user autenticated but not yet added to list
             console.log("add user")
-            
+            history("/Login")
             //use post 
             const newpart = {
               email: currentUser.email,
@@ -52,7 +93,7 @@ export default function Login() {
               headers: {'Content-type': 'application/json'},
               body: JSON.stringify(newpart)
             })
-            .then(history("/Login"))
+            .then(console.log("yay"))
             .catch()
 
           } else {

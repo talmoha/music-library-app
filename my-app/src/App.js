@@ -6,6 +6,7 @@ import Signup from './components/signup';
 import Signin from './components/signin';
 import ForgotPassword from './components/ForgotPassword';
 import Verify from './components/verify';
+import Admin from './components/admin';
 import { AuthProvider } from './contexts/AuthContext';
 
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signin" element={<Signin/>}/>
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
           <Route path="/verify" element={<Verify/>}/>
+          <Route path="/admin" element={<Admin/>}/>
         </Routes>
         </AuthProvider>
       </BrowserRouter>
