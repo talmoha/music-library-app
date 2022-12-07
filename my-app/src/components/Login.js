@@ -6,6 +6,7 @@ import GetArtists from './getArtists';
 import GetAlbums from './getAlbums';
 import CreateListAuth from './createListAuth';
 import { useAuth } from '../contexts/AuthContext';
+import { Link } from "react-router-dom"
 
 function Login () {
     const {currentUser} = useAuth()
@@ -109,6 +110,7 @@ function Login () {
             <span id="status7"></span>
         </div>
         <div class="space"></div>
+        <Link to="/policies">View Policies</Link>
       </div>
     );
 }

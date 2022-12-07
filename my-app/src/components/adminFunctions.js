@@ -21,15 +21,116 @@ function AdminFunc() {
         }
         //deactiviating user
         document.getElementById('deactivate').onclick = function() {
-            //checkList3()
+            checkList3()
         }
         //reactivating user
         document.getElementById('reactivate').onclick = function() {
-            //checkList4()
+            checkList4()
         }
     }, [])
     
+    //reactivate account
+    function checkList4() {
+        document.getElementById("statusError4").innerText = "";
+        var userEmail = document.getElementById('reactivate-email').value;
+        
+        //check if user is deactivated 
+        fetch("/api/delete")
+                .then(res => res.json()
+                .then(data => {
+                //check if user isnt already an edmin
+                const match = data.filter(element => {
+                    if (element.email == userEmail) {
+                    return true;
+                }
+                });
 
+                //if there is a match then display error
+                if (match.length == 0)
+                {
+                    document.getElementById("statusError4").innerText = `User is not deactivated`;
+                }
+                else {
+                    //delete it from deactivated users list
+                    document.getElementById("statusError4").innerText = `Removed deactivation status`;
+                    const newpart = { //sending json in req body
+                        email: userEmail,
+                    }
+                    fetch(`/api/delete`, {
+                        method: 'DELETE',
+                        headers: {'Content-type': 'application/json'},
+                        body: JSON.stringify(newpart)
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            res.json()
+                        }
+                    })
+                    .catch()
+                }
+        }))
+    }
+
+    //deactivate account
+    function checkList3() {
+        document.getElementById("statusError3").innerText = "";
+        var userEmail = document.getElementById('deactivate-email').value;
+        var userUsername = document.getElementById('deactivate-username').value;
+        //check if user is an actual user
+        fetch("/api/users")
+        .then(res => res.json()
+        .then(data => {
+            //check if user isnt already an edmin
+            const match = data.filter(element => {
+                if (element.email == userEmail) {
+                return true;
+                }
+            });
+
+            //if there is no match then display error
+            if (match.length == 0)
+            {
+                document.getElementById("statusError3").innerText = `User doesn't exist`;
+            }
+            else {
+                fetch("/api/delete")
+                .then(res => res.json()
+                .then(data => {
+                //check if user isnt already an edmin
+                const match1 = data.filter(element => {
+                    if (element.email == userEmail) {
+                    return true;
+                }
+                });
+
+                //if there is a match then display error
+                if (match1.length > 0)
+                {
+                    document.getElementById("statusError3").innerText = `User is already deactivated`;
+                }
+                else {
+                    document.getElementById("statusError3").innerText = `User set as deactivated`;
+                    const newpart = {
+                        email: userEmail,
+                        }
+                        fetch('/api/delete', {
+                            method: 'POST',
+                            headers: {'Content-type': 'application/json'},
+                            body: JSON.stringify(newpart)
+                        })
+                        .then(res => {
+                            if (res.ok) {
+                                res.json()
+                            }
+                        })
+                        .catch()
+                }
+                }))
+            }
+        }))
+
+    }
+    
     //checking if list name does not exist when deleting a review from a list
     function checkList() {
         document.getElementById("statusError").innerText = "";
@@ -87,7 +188,6 @@ function AdminFunc() {
                 .then(res => {
                     if (res.ok) {
                         res.json()
-                        console.log("ok")
                     }
                 })
                 .catch()
@@ -202,85 +302,67 @@ function AdminFunc() {
 
     //adding user as admin
     function checkList2() {
-        document.getElementById("statusError").innerText = "";
-        var newList1 = document.getElementById('list-name-change').value;
-        var review = document.getElementById('review-author').value;
-        review = review.toLowerCase();
+        document.getElementById("statusError2").innerText = "";
+        var adminEmail = document.getElementById('admin-email').value;
+        var adminUsername = document.getElementById('admin-username').value;
 
-        fetch("/api/lists")
+        //check if user is an actual user
+        fetch("/api/users")
         .then(res => res.json()
         .then(data => {
-            //check name for each list element name
-            const match = data.filter(element => {
-                if (element.name.toLowerCase() == newList1.toLowerCase()) {
+            //check if user isnt already an edmin
+            const match2 = data.filter(element => {
+                if (element.email == adminEmail) {
                 return true;
                 }
             });
 
-            //if there is no match, then call addList function, if there is a match, then display error
-            if (match.length == 0)
+            //if there is no match then display error
+            if (match2.length == 0)
             {
-                document.getElementById("statusError").innerText = `List doesn't exist`;
-                console.log(`List doesn't exist`)
+                document.getElementById("statusError2").innerText = `User doesn't exist`;
             }
-            else if (!match[0].comment.includes(review.toLowerCase())){
-                document.getElementById("statusError").innerText = "List doesn't have review from this user";
-                
-            } else {
-                var commentByAuthor = match[0].comment; //get the comment from that author and remove it from the rest of the comments, store in in deleted comments database
-                var authorLength = ` -${review}`
-                var mySubString = commentByAuthor.substring(
-                    commentByAuthor.indexOf(`\n - From: ${review}`), 
-                    commentByAuthor.lastIndexOf(` -${review}`) + authorLength.length,
-                );
-                commentByAuthor = commentByAuthor.replace(mySubString, "");
-                document.getElementById("statusError").innerText = "Deleted " + mySubString;
-
-                const newpart = { //sending json in req body
-                    name: match[0].name,
-                    id: match[0].id,
-                    tracks: match[0].tracks,
-                    creator: match[0].creator,
-                    lastModified: match[0].lastModified,
-                    rating: match[0].rating,
-                    status: match[0].status,
-                    description: match[0].status,
-                    comment: commentByAuthor
+            else {
+                //check if user is an admin already
+                fetch("/api/admin")
+                .then(res => res.json()
+                .then(data => {
+                //check if user isnt already an edmin
+                const match = data.filter(element => {
+                    if (element.email == adminEmail) {
+                    return true;
                 }
+                });
 
-                //delete that comment from the lists comment
-                fetch(`/api/lists/${match[0].name}`, { //use post for match
-                    method: 'POST',
-                    headers: {'Content-type': 'application/json'},
-                    body: JSON.stringify(newpart)
-                })
-                .then(res => {
-                    if (res.ok) {
-                        res.json()
-                        console.log("ok")
-                    }
-                })
-                .catch()
-
-                //add to hidden reviews
-                const newpart1 = { //sending json in req body
-                    listName: match[0].name,
-                    userName: review,
-                    review: mySubString
+                //if there is a match then display error
+                if (match.length > 0)
+                {
+                    document.getElementById("statusError2").innerText = `User is already an admin`;
                 }
-                fetch(`/api/unhide`, { //use post for match
-                    method: 'POST',
-                    headers: {'Content-type': 'application/json'},
-                    body: JSON.stringify(newpart1)
-                })
-                .then(res => {
-                    if (res.ok) {
-                        res.json()
+                else {
+                    document.getElementById("statusError2").innerText = `Added as admin`;
+                    const newpart = { //sending json in req body
+                        username: adminUsername,
+                        email: adminEmail,
                     }
-                })
-                .catch()
+
+                    //add admin
+                    fetch(`/api/admin`, { //use post for match
+                        method: 'POST',
+                        headers: {'Content-type': 'application/json'},
+                        body: JSON.stringify(newpart)
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            res.json()
+                        }
+                    })
+                    .catch()
+                }
+            }))
             }
         }))
+
     }
   
     useEffect(() => { //automatically call at the beginning

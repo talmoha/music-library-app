@@ -3,6 +3,7 @@
 *.json
 *.md
 *.png
+*.pdf
 
 #other uneditable folders like public
 public/

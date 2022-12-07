@@ -551,6 +551,8 @@ function CreateListAuth() {
                 if (match.length == 0)
                 {
                     document.getElementById("status1").innerText = `Name doesn't exist`;
+                } else if (match[0].creator != creatorName) { //if its not users list
+                    document.getElementById("status1").innerText = `You do not own this playlist`;
                 }
                 else {
                     addList1();
@@ -626,6 +628,8 @@ function CreateListAuth() {
                 if (match.length == 0)
                 {
                     document.getElementById("status4").innerText = `Name doesn't exist`;
+                } else if (match[0].creator != creatorName) { //if its not users list
+                    document.getElementById("status4").innerText = `You do not own this playlist`;
                 }
                 else {
                     editList();

@@ -44,7 +44,7 @@ export default function Login() {
             checkUser(emailRef.current.value); // to verify if user verified email
           } else if (match.length > 0) { //if user autenticated but not yet added to list
             console.log("delete user")
-            setError("Deactivated account, contact admin for help: tasneem@gmail.com")
+            setError("Deactivated account, contact admin for help: kobaxip254@cnogs.com")
           }
       }))
     }

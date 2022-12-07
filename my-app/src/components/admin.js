@@ -22,6 +22,16 @@ function Admin () {
                 <a class="active" href="#home">Home</a>
                 <div class="login-container">
                     <li class="no-bullet">
+                        <a type="submit" href="/copyright">Copyright</a>
+                    </li>
+                </div>
+                <div class="login-container">
+                    <li class="no-bullet">
+                        <a type="submit" href="/Login">Website</a>
+                    </li>
+                </div>
+                <div class="login-container">
+                    <li class="no-bullet">
                         <a>Welcome Administrator</a>
                         <a type="submit" href="/signin" onClick={currentUser.email == ""}>Sign out</a>
                     </li>
@@ -76,19 +86,15 @@ function Admin () {
                 <br></br>
                 <button id="deactivate"> Ok </button><br></br>
             </span>
-            <span id="statusError2"></span>
+            <span id="statusError3"></span>
 
             <h2>Reactivate User</h2>
             <span>
                 User email: <br></br>
                 <input type="text" id="reactivate-email"/>
-                <br></br>Username: 
-                <br></br>
-                <input type="text" id="reactivate-username"/>
-                <br></br>
                 <button id="reactivate"> Ok </button><br></br>
             </span>
-            <span id="statusError2"></span>
+            <span id="statusError4"></span>
         </div><AdminFunc></AdminFunc>
         <div class="space"></div>
       </div>

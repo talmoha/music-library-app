@@ -5,6 +5,7 @@ import GetTracks from './getTracks';
 import GetArtists from './getArtists';
 import GetAlbums from './getAlbums';
 import CreateList from './createList';
+import { Link } from "react-router-dom"
 
 function MainPage () {
   
@@ -44,6 +45,7 @@ function MainPage () {
         <div id="new-div-list"></div>
         <button id="greatBtn" class="dissapear">close</button>
         <div class="space"></div>
+        <Link to="/policies">View Policies</Link>
       </div>
     );
 }

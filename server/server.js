@@ -8,8 +8,10 @@ const router3 = express.Router(); //router for artists
 const router4 = express.Router(); //router for albums
 const router5 = express.Router(); //router for users
 const router6 = express.Router(); //router for unauthes users
-const router7 = express.Router(); //router for admins
+const router7 = express.Router(); //router for deleted users
 const router8 = express.Router(); //router for unhide reviews
+const router9 = express.Router(); //router for admins
+const router10 = express.Router(); //router for policies
 
 const csv = require('csv-parser'); //parser library
 const fs = require('fs');//file stream
@@ -53,6 +55,10 @@ const unUsers = [
 //hidden reviews
 const hidden = [
     {listName: '', userName: "", review: ""}
+];
+
+//policies
+const policies = [
 ];
 
 //setup serving front-end code
@@ -113,7 +119,7 @@ router6.use(express.json());
 router6.route('/') //all routes with a part ID
     //get details of users
     .get((req, res) => {
-        res.send(unUsers); //array of genres to display on URL localhost:3000/api/list
+        res.send(unUsers); 
     })
     //create a new part (post) if you give the body some json code
     .post((req, res) => {
@@ -136,6 +142,18 @@ router7.route('/') //all routes with a part ID
         const newpartInsert = {email: newpart.email }
         deletedUsers.push(newpartInsert);
         res.send(newpartInsert);
+    })
+    //to remove the deactivation status from users
+    .delete((req, res) => {
+        //find the part
+        const part = deletedUsers.findIndex(p => p.email === req.params.email);
+        //if it doesn't exist
+        if (part < 0) { //not found
+            res.status(404).send(`Not found`);
+        }
+        //delete otherwise
+        deletedUsers.splice(part, 1);
+        res.sendStatus(404);
     })
 ////////////////////////////////////////////////////////////////////////////for list
 //parse data in body as JSON
@@ -202,7 +220,7 @@ router8.use(express.json());
 router8.route('/') //all the routes to the base prefix
     //get a list of all lists
     .get((req, res) => {
-        res.send(hidden); //array of genres to display on URL localhost:3000/api/list
+        res.send(hidden); 
     })
 
     //create a new part (post) if you give the body some json code
@@ -223,6 +241,60 @@ router8.route('/') //all the routes to the base prefix
         hidden.splice(part, 1);
         res.sendStatus(404);
     })
+
+////////////////////////////////////////////////////////////////////////////for admins
+//parse data in body as JSON
+router9.use(express.json());
+
+//routes for /api/admin
+router9.route('/') //all the routes to the base prefix
+    //get a list of all admins
+    .get((req, res) => {
+        res.send(admin); //array of admins
+    })
+
+    //create a new part (post) if you give the body some json code
+    .post((req, res) => {
+        const newpart = req.body;
+        const newpartInsert = {username: newpart.username, email: newpart.email}
+        admin.push(newpartInsert);
+        res.send(newpartInsert);
+    })
+////////////////////////////////////////////////////////////////////////////for policies
+//parse data in body as JSON
+router10.use(express.json());
+
+//routes for /api/policies
+router10.route('/') //all the routes to the base prefix
+    //get a list of all admins
+    .get((req, res) => {
+        res.send(policies); //array of admins
+    })
+
+    //create a new part (post) if you give the body some json code
+    .post((req, res) => {
+        const newpart = req.body;
+        const newpartInsert = {name: newpart.name, content: newpart.content}
+        policies.push(newpartInsert);
+        res.send(newpartInsert);
+    })
+
+router10.route('/:name') //routes with a part name
+    //update details of a given part with given name
+    .post((req, res) => {
+        //find the part
+        const part = policies.findIndex(p => p.name === req.params.name);
+    
+        if (part < 0) { //not found
+            res.status(404).send(`Part ${req.params.name} not found`);
+        }
+        else {//part exists, then change 
+            policies[part].name = req.body.name;
+            policies[part].content = req.body.content;
+            res.send(policies[part]);
+        }
+    })
+
 ////////////////////////////////////////////////////////////////////////////for tracks
 //parse data in body as JSON
 router2.use(express.json());
@@ -357,5 +429,11 @@ app.use('/api/delete', router7)
 
 //for deleted users
 app.use('/api/unhide', router8)
+
+//for deleted users
+app.use('/api/admin', router9)
+
+//for polcicies
+app.use('/api/policies', router10)
 
 app.listen(port, () => console.log(`Listening on port ${port}...`)) //display this msg on console

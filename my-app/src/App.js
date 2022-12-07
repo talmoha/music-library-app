@@ -7,6 +7,8 @@ import Signin from './components/signin';
 import ForgotPassword from './components/ForgotPassword';
 import Verify from './components/verify';
 import Admin from './components/admin';
+import Copyright from './components/copyright';
+import Policies from './components/policies';
 import { AuthProvider } from './contexts/AuthContext';
 
 
@@ -23,6 +25,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
           <Route path="/verify" element={<Verify/>}/>
           <Route path="/admin" element={<Admin/>}/>
+          <Route path="/copyright" element={<Copyright/>}/>
+          <Route path="/policies" element={<Policies/>}/>
         </Routes>
         </AuthProvider>
       </BrowserRouter>
