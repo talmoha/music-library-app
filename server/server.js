@@ -372,7 +372,7 @@ fs.createReadStream('raw_artists.csv')
         for (var {artist_id: id, artist_active_year_begin: bYear, artist_active_year_end: eYear, artist_associated_labels: label, artist_name: name, artist_comments: comments, artist_handle: handle} of artist) {
             finalArtist.push({id, bYear, eYear, label, name, comments, handle});
         }
-        finalArtist = finalArtist.slice(0,10);
+        //finalArtist = finalArtist.slice(0,10);
     });
 
 //parse data in track file
@@ -383,7 +383,7 @@ fs.createReadStream('raw_tracks.csv')
         for (var { track_id: id, album_title: album, artist_id: artistID, artist_name: artistName, tags: t, track_date_created: dateCreated, track_date_recorded: dateRecorded, track_duration: duration, track_genres: genres, track_number: number, track_title: title} of track) {
             finalTrack.push({id, album, artistID, artistName, t, dateCreated, dateRecorded, duration, genres, number, title});
         }
-        finalTrack = finalTrack.slice(0,10); //slicing for now to make number of tracks more manageable
+        //finalTrack = finalTrack.slice(0,10); //slicing for now to make number of tracks more manageable
     });
 
 //parse data in album file
@@ -394,7 +394,7 @@ fs.createReadStream('raw_albums.csv')
     for (var { album_id: id, album_date_released: release, album_title: title, artist_name: artistName} of album) {
         finalAlbum.push({id, release, title, artistName});
     }
-    finalAlbum = finalAlbum.slice(0,10); //slicing for now to make number of tracks more manageable
+    //finalAlbum = finalAlbum.slice(0,10); //slicing for now to make number of tracks more manageable
 });
 
 //get for root
